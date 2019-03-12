@@ -1,5 +1,7 @@
 package games;
 
+import java.util.concurrent.TimeUnit;
+
 public class Slot {
 
     public static void main(String... __) throws InterruptedException {

@@ -6,7 +6,7 @@ run:
 compile-run: build run
 
 build:
-	./mvnw verify
+	mvnw verify
 
 update:
 	./mvnw versions:update-properties versions:display-plugin-updates		
