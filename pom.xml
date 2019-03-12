@@ -206,47 +206,7 @@
                 <version>3.7.1</version>
             </plugin>
 			
-			<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.0.0</version>
-                <executions>
-                    <execution>
-                        <id>validate</id>
-                        <phase>validate</phase>
-                        <configuration>
-                            <encoding>UTF-8</encoding>
-                            <consoleOutput>true</consoleOutput>
-                            <failsOnError>true</failsOnError>
-                            <linkXRef>false</linkXRef>
-                        </configuration>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <logViolationsToConsole>true</logViolationsToConsole>
-                    <checkstyleRules>
-                        <module name="Checker">
-
-                            <module name="FileLength">
-                                <property name="max" value="3500" />
-                                <property name="fileExtensions" value="java"/>
-                            </module>
-
-                            <module name="FileTabCharacter"/>
-
-                            <module name="TreeWalker">
-                                <module name="StaticVariableName"/>
-                                <module name="TypeName">
-                                    <property name="format" value="^_?[A-Z][a-zA-Z0-9]*$"/>
-                                </module>
-                            </module>
-                        </module>
-                    </checkstyleRules>
-                </configuration>
-            </plugin>
+			
 			
         </plugins>
 		
