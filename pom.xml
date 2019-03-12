@@ -19,6 +19,7 @@
 
         <!--Libs-->
         <log4j-slf4j-impl.version>2.11.2</log4j-slf4j-impl.version>
+        <commons-math3.version>3.6</commons-math3.version>
 
         <!--Plugins-->
         <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
@@ -27,44 +28,35 @@
         <maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
         <sonar-maven-plugin.version>2.7.1</sonar-maven-plugin.version>
-		<versions-maven-plugin.version>2.7</versions-maven-plugin.version>
+        <versions-maven-plugin.version>2.7</versions-maven-plugin.version>
+        <maven-pmd-plugin.version>3.11.0</maven-pmd-plugin.version>
+        <maven-site-plugin.version>3.7.1</maven-site-plugin.version>
+        <spotbugs-maven-plugin.version>3.1.11</spotbugs-maven-plugin.version>
 
     </properties>
 
     <dependencies>
-	
-        <!-- COMMON LIBS (Log4J2 & Vavr) -->
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-math3</artifactId>
-			<version>3.6</version>
-			<optional>true</optional>
-			<scope>compile</scope>
-		</dependency>
+
+        <!-- COMMON LIBS (Log4J2) -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+            <version>${commons-math3.version}</version>
+            <optional>true</optional>
+        </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j-impl</artifactId>
             <version>${log4j-slf4j-impl.version}</version>
             <optional>true</optional>
         </dependency>
-		<dependency>
-			<groupId>com.github.spotbugs</groupId>
-			<artifactId>spotbugs</artifactId>
-			<version>3.1.10</version>
-		</dependency>
-		<dependency>
-			<groupId>org.codehaus.mojo</groupId>
-			<artifactId>sonar-maven-plugin</artifactId>
-			<version>2.7.1</version>
-			<type>pom</type>
-		</dependency>
-		
+
     </dependencies>
 
     <build>
-	
+
         <plugins>
-		
+
             <!-- COMPILER (Java10+ and lombok compatible) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -75,13 +67,6 @@
                         <arg>-parameters</arg>
                     </compilerArgs>
                 </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.ow2.asm</groupId>
-                        <artifactId>asm</artifactId>
-                        <version>6.2.1</version> <!-- Use newer version of ASM -->
-                    </dependency>
-                </dependencies>
             </plugin>
 
             <!-- JAR with dependencies -->
@@ -174,60 +159,60 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
-				<version>${versions-maven-plugin.version}</version>
+                <version>${versions-maven-plugin.version}</version>
                 <configuration>
                     <generateBackupPoms>false</generateBackupPoms>
                     <rulesUri>file://${project.basedir}/maven-version-rules.xml</rulesUri>
                 </configuration>
             </plugin>
-			
-			<!-- for PMD-->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-pmd-plugin</artifactId>
-				<version>3.11.0</version>
-				<configuration>
-					<failOnViolation>true</failOnViolation> <!-- this is actually true by default, but can be disabled -->
-					<printFailingErrors>true</printFailingErrors>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>check</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			
-			<!-- for reporting -->
-			<plugin>
+
+            <!-- for PMD-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>${maven-pmd-plugin.version}</version>
+                <configuration>
+                    <failOnViolation>true
+                    </failOnViolation> <!-- this is actually true by default, but can be disabled -->
+                    <printFailingErrors>true</printFailingErrors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- for reporting -->
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>3.7.1</version>
+                <version>${maven-site-plugin.version}</version>
             </plugin>
-			
-			
-			
+
+
         </plugins>
-		
+
     </build>
-	
-	<reporting>
-	
-		<plugins>
-		
-			<plugin>
-				<groupId>com.github.spotbugs</groupId>
-				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>3.1.10</version>
-				<configuration>
-					<xmlOutput>true</xmlOutput>
-					<!-- Optional directory to put spotbugs xdoc xml report -->
-					<xmlOutputDirectory>target/site</xmlOutputDirectory>
-				</configuration>
-			</plugin>
-		</plugins>
-		
-	</reporting>
-	
+
+    <reporting>
+
+        <plugins>
+
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>${spotbugs-maven-plugin.version}</version>
+                <configuration>
+                    <xmlOutput>true</xmlOutput>
+                    <!-- Optional directory to put spotbugs xdoc xml report -->
+                    <xmlOutputDirectory>target/site</xmlOutputDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
+
+    </reporting>
+
 </project>
