@@ -1,0 +1,9 @@
+jdk:
+  - oraclejdk11
+before_install:
+   - ./custom_setup.sh
+install:
+   - echo "Running a custom install command"
+   - ./mvnw install -DskipTests
+env:
+   MYVAR: "custom environment variable

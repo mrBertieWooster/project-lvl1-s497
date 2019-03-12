@@ -18,3 +18,9 @@ build: compile
 update:
 	./mvnw versions:update-properties
 	./mvnw versions:display-plugin-updates
+
+site:
+	./mvnw site
+
+pmd:
+	./mvnw pmd:pmd
