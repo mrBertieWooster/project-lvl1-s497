@@ -3,16 +3,9 @@
 run:
 	java -jar ./target/project-lvl1-s497-1.0-SNAPSHOT-jar-with-dependencies.jar
 
-clean:
-	rm -rf ./target
-
-compile: clean
-	mkdir -p ./target/classes
-	javac -d ./target/classes ./src/main/java/games/Slot.java
-
 compile-run: build run
 
-build: compile
+build:
 	./mvnw clean package
 
 update:
