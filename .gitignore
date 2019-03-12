@@ -1,4 +1,2 @@
-*.iml
-.idea/*
 /target/*
-maven-version-rules.xml
+pom.xml.versionsBackup

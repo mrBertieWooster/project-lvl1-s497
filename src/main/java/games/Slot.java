@@ -4,7 +4,7 @@ public class Slot {
 
     public static void main(String... __) throws InterruptedException {
 
-        int jackpot = 1000;
+        int jackpot = 1_000;
         int balance = 100;
         int bet = 10;
         int size = 7;
@@ -17,7 +17,7 @@ public class Slot {
             System.out.println("Рады приветствовать Вас на игре \"Однорукий бандит\"");
             System.out.printf("На Вашем счету %s$, ставка - %s$%n", balance, bet);
             System.out.println("Крутим барабаны!");
-            Thread.sleep(2000);
+            TimeUnit.SECONDS.sleep(2);
             System.out.println("Текущий розыгрыш принес следующие результаты:");
 
             firstCounter = (firstCounter + (int) Math.round(Math.random() * 100)) % size;
