@@ -13,7 +13,7 @@ compile: clean
 compile-run: build run
 
 build: compile
-	mvnw clean package
+	./mvnw clean package
 
 update:
 	./mvnw versions:update-properties versions:display-plugin-updates		
