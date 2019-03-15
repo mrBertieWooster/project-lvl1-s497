@@ -36,30 +36,26 @@ public class Drunkard {
             int curCardP2 = getCard(1);
             winner = 2;
             if (curCardP1 > curCardP2 || curCardP1 == 0 && curCardP2 == 8) {
-                playersCardHeads[0] = incrementIndex(playersCardHeads[0]);
-                playersCards[0][playersCardHeads[0]] = playersCards[1][playersCardTails[1]];
-                playersCardHeads[0] = incrementIndex(playersCardHeads[0]);
-                playersCards[0][playersCardHeads[0]] = playersCards[0][playersCardTails[0]];
-
+                int[] arrCards = {curCardP1, curCardP2};
+                addCard2Player(0, arrCards);
                 winner = 0;
                 System.out.println("Кон за первым игроком!");
             } else if (curCardP1 < curCardP2 || curCardP2 == 0 && curCardP1 == 8) {
-                playersCardHeads[1] = incrementIndex(playersCardHeads[1]);
-                playersCards[1][playersCardHeads[1]] = playersCards[0][playersCardTails[0]];
-                playersCardHeads[1] = incrementIndex(playersCardHeads[1]);
-                playersCards[1][playersCardHeads[1]] = playersCards[0][playersCardTails[0]];
-
+                int[] arrCards = {curCardP1, curCardP2};
+                addCard2Player(1, arrCards);
                 winner = 1;
                 System.out.println("Кон за вторым игроком!");
             } else {
+                int[] arrCards = {curCardP1};
+                addCard2Player(0, arrCards);
+                arrCards[0] = curCardP2;
+                addCard2Player(1, arrCards);
                 System.out.println("Ничья!");
-                playersCardHeads[1] = incrementIndex(playersCardHeads[1]);
-                playersCardHeads[0] = incrementIndex(playersCardHeads[0]);
-                playersCards[1][playersCardHeads[1]] = playersCards[1][playersCardTails[1]];
-                playersCards[0][playersCardHeads[0]] = playersCards[0][playersCardTails[0]];
-
             }
-            System.out.printf("У игрока №1 %s карт, у игрока №2 %s карт%n", countCards(playersCardTails[0], playersCardHeads[0]), countCards(playersCardTails[1], playersCardHeads[1]));
+            System.out.printf("У игрока №1 %s карт, у игрока №2 %s карт%n", countCards(playersCardTails[0],
+                                                                                        playersCardHeads[0]),
+                                                                                        countCards(playersCardTails[1],
+                                                                                        playersCardHeads[1]));
 
             turnCount += 1;
             TimeUnit.SECONDS.sleep(2);
@@ -111,7 +107,14 @@ public class Drunkard {
 
     private static int getCard(int index){
         playersCardTails[index] = incrementIndex(playersCardTails[index]);
-        return getPar(playersCards[index][playersCardTails[index-1]]).ordinal();
+        return playersCards[index][playersCardTails[index] - 1];
+    }
+
+    private static void addCard2Player(int index, int[]cards){
+        for(int i = 0; i<cards.length; i++){
+            playersCardHeads[index] = incrementIndex(playersCardHeads[index]);
+            playersCards[index][playersCardHeads[index]] = cards[i];
+        }
     }
 
     private static boolean hasWinner(int winner){
