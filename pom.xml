@@ -15,6 +15,7 @@
         <!--Project settings-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.parameters>true</maven.compiler.parameters>
         <maven.compiler.release>11</maven.compiler.release>
 
         <!--Libs-->
@@ -56,19 +57,11 @@
     <build>
 
         <plugins>
-
-            <!-- COMPILER (Java10+ and lombok compatible) -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
-                <configuration>
-                    <compilerArgs>
-                        <arg>-parameters</arg>
-                    </compilerArgs>
-                </configuration>
             </plugin>
 
-            <!-- JAR with dependencies -->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>${maven-assembly-plugin.version}</version>
@@ -93,7 +86,6 @@
                 </executions>
             </plugin>
 
-            <!-- CODE COVERAGE (JaCoCo) -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -114,7 +106,6 @@
                 </executions>
             </plugin>
 
-            <!-- Minimum maven version -->
             <plugin>
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <version>${maven-enforcer-plugin.version}</version>
@@ -135,7 +126,6 @@
                 </executions>
             </plugin>
 
-            <!-- SUREFIRE (compatible with JUnit 5+, Java 9+, Lombok) -->
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
@@ -162,7 +152,6 @@
                 </configuration>
             </plugin>
 
-            <!-- for PMD-->
             <plugin>
                 <artifactId>maven-pmd-plugin</artifactId>
                 <version>${maven-pmd-plugin.version}</version>
@@ -180,13 +169,11 @@
                 </executions>
             </plugin>
 
-            <!-- for reporting -->
             <plugin>
                 <artifactId>maven-site-plugin</artifactId>
                 <version>${maven-site-plugin.version}</version>
             </plugin>
-
-
+            
         </plugins>
 
     </build>
