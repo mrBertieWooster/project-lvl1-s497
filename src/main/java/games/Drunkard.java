@@ -13,7 +13,7 @@ public class Drunkard {
     private static final String[] players = {"Игрок №1", "Игрок №2"};
     private static int[][] playersCards = new int[PLAYERS_COUNT][CARDS_TOTAL_COUNT];
 
-    private static int[] playersCardTails = {0, 0};
+    private static int[] playersCardTails = new int[2];
     private static int[] playersCardHeads = {CARDS_TOTAL_COUNT / 2, CARDS_TOTAL_COUNT / 2};
 
     public static void main(String... __) throws InterruptedException {
@@ -22,20 +22,25 @@ public class Drunkard {
         dealCards(playersCards);
 
         int turnCount = 1;
-        while (true) {
+        int winner = 0;
 
-            System.out.printf("Ход №%s, %s карта: %s; %s карта: %s%n", turnCount, players[0], toString(playersCards[0][playersCardTails[0]]), players[1], toString(playersCards[1][playersCardTails[1]]));
-            int curCardP1 = getPar(playersCards[0][playersCardTails[0]]).ordinal();
-            int curCardP2 = getPar(playersCards[1][playersCardTails[1]]).ordinal();
-            int winner = 2;
+        while (!hasWinner(winner)) {
+
+            System.out.printf("Ход №%s, %s карта: %s; %s карта: %s%n", turnCount,
+                                                                        players[0],
+                                    toString(playersCards[0][playersCardTails[0]]),
+                                                                        players[1],
+                                    toString(playersCards[1][playersCardTails[1]]));
+
+            int curCardP1 = getCard(0);
+            int curCardP2 = getCard(1);
+            winner = 2;
             if (curCardP1 > curCardP2 || curCardP1 == 0 && curCardP2 == 8) {
                 playersCardHeads[0] = incrementIndex(playersCardHeads[0]);
                 playersCards[0][playersCardHeads[0]] = playersCards[1][playersCardTails[1]];
                 playersCardHeads[0] = incrementIndex(playersCardHeads[0]);
                 playersCards[0][playersCardHeads[0]] = playersCards[0][playersCardTails[0]];
 
-                playersCardTails[0] = incrementIndex(playersCardTails[0]);
-                playersCardTails[1] = incrementIndex(playersCardTails[1]);
                 winner = 0;
                 System.out.println("Кон за первым игроком!");
             } else if (curCardP1 < curCardP2 || curCardP2 == 0 && curCardP1 == 8) {
@@ -44,8 +49,6 @@ public class Drunkard {
                 playersCardHeads[1] = incrementIndex(playersCardHeads[1]);
                 playersCards[1][playersCardHeads[1]] = playersCards[0][playersCardTails[0]];
 
-                playersCardTails[0] = incrementIndex(playersCardTails[0]);
-                playersCardTails[1] = incrementIndex(playersCardTails[1]);
                 winner = 1;
                 System.out.println("Кон за вторым игроком!");
             } else {
@@ -54,14 +57,9 @@ public class Drunkard {
                 playersCardHeads[0] = incrementIndex(playersCardHeads[0]);
                 playersCards[1][playersCardHeads[1]] = playersCards[1][playersCardTails[1]];
                 playersCards[0][playersCardHeads[0]] = playersCards[0][playersCardTails[0]];
-                playersCardTails[0] = incrementIndex(playersCardTails[0]);
-                playersCardTails[1] = incrementIndex(playersCardTails[1]);
+
             }
             System.out.printf("У игрока №1 %s карт, у игрока №2 %s карт%n", countCards(playersCardTails[0], playersCardHeads[0]), countCards(playersCardTails[1], playersCardHeads[1]));
-            if (winner < 2 && playerCardsIsEmpty(winner)) {
-                System.out.println("У нас победитель! Выиграл " + players[winner]);
-                break;
-            }
 
             turnCount += 1;
             TimeUnit.SECONDS.sleep(2);
@@ -109,6 +107,19 @@ public class Drunkard {
         } else {
             return head - tail;
         }
+    }
+
+    private static int getCard(int index){
+        playersCardTails[index] = incrementIndex(playersCardTails[index]);
+        return getPar(playersCards[index][playersCardTails[index-1]]).ordinal();
+    }
+
+    private static boolean hasWinner(int winner){
+        if (winner < 2 && playerCardsIsEmpty(winner)) {
+            System.out.println("У нас победитель! Выиграл " + players[winner]);
+            return true;
+        }
+        return false;
     }
 
     private static boolean playerCardsIsEmpty(int playerIndex) {
