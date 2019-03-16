@@ -1,20 +1,20 @@
 package games;
 
-import org.apache.commons.math3.util.MathArrays;
-
 import java.util.concurrent.TimeUnit;
 
-public class Drunkard {
-    private static final int PARS_TOTAL_COUNT = Par.values().length;
+import static games.CardUtils.CARDS_TOTAL_COUNT;
+import static games.CardUtils.getShaffledCards;
 
-    private static final int CARDS_TOTAL_COUNT = PARS_TOTAL_COUNT * Suit.values().length;
+
+public class Drunkard {
 
     private static final int PLAYERS_COUNT = 2;
     private static final String[] players = {"Игрок №1", "Игрок №2"};
+
     private static int[][] playersCards = new int[PLAYERS_COUNT][CARDS_TOTAL_COUNT];
 
-    private static int[] playersCardTails = new int[2];
-    private static int[] playersCardHeads = {CARDS_TOTAL_COUNT / 2, CARDS_TOTAL_COUNT / 2};
+    private static int[] playersCardTails = new int[PLAYERS_COUNT];
+    private static int[] playersCardHeads = {CARDS_TOTAL_COUNT / PLAYERS_COUNT, CARDS_TOTAL_COUNT / PLAYERS_COUNT};
 
     public static void main(String... __) throws InterruptedException {
         System.out.println("Сдаем карты");
@@ -27,22 +27,20 @@ public class Drunkard {
         while (!hasWinner(winner)) {
 
             System.out.printf("Ход №%s, %s карта: %s; %s карта: %s%n", turnCount,
-                                                                        players[0],
-                                    toString(playersCards[0][playersCardTails[0]]),
-                                                                        players[1],
-                                    toString(playersCards[1][playersCardTails[1]]));
+                    players[0],
+                    CardUtils.toString(playersCards[0][playersCardTails[0]]),
+                    players[1],
+                    CardUtils.toString(playersCards[1][playersCardTails[1]]));
 
             int curCardP1 = getCard(0);
             int curCardP2 = getCard(1);
-            winner = 2;
+            winner = PLAYERS_COUNT;
             if (curCardP1 > curCardP2 || curCardP1 == 0 && curCardP2 == 8) {
-                int[] arrCards = {curCardP1, curCardP2};
-                addCard2Player(0, arrCards);
+                addCard2Player(0, new int[]{curCardP1, curCardP2});
                 winner = 0;
                 System.out.println("Кон за первым игроком!");
             } else if (curCardP1 < curCardP2 || curCardP2 == 0 && curCardP1 == 8) {
-                int[] arrCards = {curCardP1, curCardP2};
-                addCard2Player(1, arrCards);
+                addCard2Player(1, new int[]{curCardP1, curCardP2});
                 winner = 1;
                 System.out.println("Кон за вторым игроком!");
             } else {
@@ -53,72 +51,38 @@ public class Drunkard {
                 System.out.println("Ничья!");
             }
             System.out.printf("У игрока №1 %s карт, у игрока №2 %s карт%n", countCards(playersCardTails[0],
-                                                                                        playersCardHeads[0]),
-                                                                                        countCards(playersCardTails[1],
-                                                                                        playersCardHeads[1]));
+                    playersCardHeads[0]),
+                    countCards(playersCardTails[1],
+                            playersCardHeads[1]));
 
             turnCount += 1;
             TimeUnit.SECONDS.sleep(2);
         }
     }
 
-    enum Suit {
-        SPADES, // пики
-        HEARTS, // червы
-        CLUBS, // трефы
-        DIAMONDS // бубны
-    }
-
-    enum Par {
-        SIX,
-        SEVEN,
-        EIGHT,
-        NINE,
-        TEN,
-        JACK, // Валет
-        QUEEN, // Дама
-        KING, // Король
-        ACE // Туз
-    }
-
-    private static Suit getSuit(int cardNumber) {
-        return Suit.values()[cardNumber / PARS_TOTAL_COUNT];
-    }
-
-    private static Par getPar(int cardNumber) {
-        return Par.values()[cardNumber % PARS_TOTAL_COUNT];
-    }
-
-    private static String toString(int cardNumber) {
-        return getPar(cardNumber) + " " + getSuit(cardNumber);
-    }
 
     private static int incrementIndex(int i) {
         return (i + 1) % CARDS_TOTAL_COUNT;
     }
 
     private static int countCards(int tail, int head) {
-        if (tail > head) {
-            return head + 35 - tail;
-        } else {
-            return head - tail;
-        }
+        return head - tail + tail > head ? CARDS_TOTAL_COUNT - 1 : 0;
     }
 
-    private static int getCard(int index){
+    private static int getCard(int index) {
         playersCardTails[index] = incrementIndex(playersCardTails[index]);
         return playersCards[index][playersCardTails[index] - 1];
     }
 
-    private static void addCard2Player(int index, int[]cards){
-        for(int i = 0; i<cards.length; i++){
+    private static void addCard2Player(int index, int... cards) {
+        for (int card : cards) {
             playersCardHeads[index] = incrementIndex(playersCardHeads[index]);
-            playersCards[index][playersCardHeads[index]] = cards[i];
+            playersCards[index][playersCardHeads[index]] = cards[card];
         }
     }
 
-    private static boolean hasWinner(int winner){
-        if (winner < 2 && playerCardsIsEmpty(winner)) {
+    private static boolean hasWinner(int winner) {
+        if (winner < PLAYERS_COUNT && playerCardsIsEmpty(winner)) {
             System.out.println("У нас победитель! Выиграл " + players[winner]);
             return true;
         }
@@ -133,12 +97,7 @@ public class Drunkard {
     }
 
     private static void dealCards(int[][] playersCards) {
-        int[] deck = new int[CARDS_TOTAL_COUNT];
-        for (int i = 0; i < deck.length; i++) {
-            deck[i] = i;
-        }
-
-        MathArrays.shuffle(deck);
+        int[] deck = getShaffledCards();
 
         for (int i = 0, j = 0; i < deck.length; j++, i += 2) {
             playersCards[0][j] = deck[i];

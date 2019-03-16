@@ -1,12 +1,153 @@
 package games;
 
+import java.io.IOException;
+
 public class BlackJack {
 
+    private static int[] cards; // Основная колода
+    private static int cursor; // Счётчик карт основной колоды
+
+    private static int[][] playersCards; // карты игроков. Первый индекс - номер игрока
+    private static int[] playersCursors; // курсоры карт игроков. Индекс - номер игрока
+
+    private static final int MAX_VALUE = 21;
+    private static final int MAX_CARDS_COUNT = 8;
+    private static final int BET = 8;
+
+    private static int[] playersMoney = {100, 100};
+
+    public static void main(String... __) throws IOException {
+        while (playersMoney[0] > 0 && playersMoney[1] > 0) {
+            initRound();
+            addCard2Player(0);
+            addCard2Player(0);
+            if (sum(0) < MAX_VALUE - 1) {
+                while (confirm("Еще карту?")) {
+                    if (!checkCardCount(0)) {
+                        break;
+                    }
+                    addCard2Player(0);
+                }
+            }
+
+            System.out.println("Игрок набрал " + getFinalSum(0));
+
+            addCard2Player(1);
+            System.out.println();
+            addCard2Player(1);
+            while (sum(1) < MAX_VALUE - 4) {
+                addCard2Player(1);
+            }
+            System.out.println("Казино набрало " + getFinalSum(1));
+            System.out.println("Победитель - " + checkWinner());
 
 
-    public static void main(String... __) {
+        }
 
-
+        if (playersMoney[0] > 0)
+            System.out.println("Вы выиграли! Поздравляем!");
+        else
+            System.out.println("Вы проиграли. Соболезнуем...");
 
     }
+
+    private static void initRound() {
+        System.out.println("\nУ Вас " + playersMoney[0] + "$, у Казино - " + playersMoney[1] + "$. Начинаем новый раунд!");
+        cards = CardUtils.getShaffledCards();
+        playersCards = new int[2][MAX_CARDS_COUNT];
+        playersCursors = new int[]{0, 0};
+        cursor = 0;
+    }
+
+    private static int value(int card) {
+        switch (CardUtils.getPar(card)) {
+            case JACK:
+                return 2;
+            case QUEEN:
+                return 3;
+            case KING:
+                return 4;
+            case SIX:
+                return 6;
+            case SEVEN:
+                return 7;
+            case EIGHT:
+                return 8;
+            case NINE:
+                return 9;
+            case TEN:
+                return 10;
+            case ACE:
+            default:
+                return 11;
+        }
+    }
+
+    static boolean confirm(String message) throws IOException {
+        System.out.println(message + " \"Y\" - Да, {любой другой символ} - нет (Что бы выйти из игры, нажмите Ctrl + C)");
+        switch (Choice.getCharacterFromUser()) {
+            case 'Y':
+            case 'y':
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private static void addCard2Player(int player) {
+        System.out.println("Выпала карта - " + CardUtils.toString(cards[cursor]));
+        playersCards[player][playersCursors[player]] = cards[cursor];
+        playersCursors[player] = playersCursors[player] + 1;
+        cursor += 1;
+    }
+
+    static int sum(int player) {
+        int result = 0;
+        for (int i = 0; i < playersCards[player].length; i++) {
+            result += playersCards[player][value(i)];
+        }
+        return result;
+    }
+
+    static int getFinalSum(int player) {
+        if (sum(player) <= 21) {
+            return sum(player);
+        } else {
+            return 0;
+        }
+    }
+
+    static boolean checkCardCount(int player) {
+        if (playersCursors[player] < MAX_CARDS_COUNT) {
+            return true;
+        }
+        return false;
+    }
+
+    static String checkWinner() {
+        if (getFinalSum(0) > MAX_VALUE && getFinalSum(1) > MAX_VALUE) {
+            return "Отсутствует";
+        }
+        if (getFinalSum(0) > MAX_VALUE) {
+            playersMoney[0] = playersMoney[0] - BET;
+            playersMoney[1] = playersMoney[1] + BET;
+            return "Казино";
+        }
+        if (getFinalSum(1) > MAX_VALUE) {
+            playersMoney[1] = playersMoney[1] - BET;
+            playersMoney[0] = playersMoney[0] + BET;
+            return "Игрок";
+        }
+        if (getFinalSum(0) > getFinalSum(1)) {
+            playersMoney[1] = playersMoney[1] - BET;
+            playersMoney[0] = playersMoney[0] + BET;
+            return "Игрок";
+        } else {
+            playersMoney[0] = playersMoney[0] - BET;
+            playersMoney[1] = playersMoney[1] + BET;
+            return "Казино";
+        }
+    }
+
+
 }
