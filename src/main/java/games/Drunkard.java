@@ -1,5 +1,7 @@
 package games;
 
+import org.slf4j.Logger;
+
 import java.util.concurrent.TimeUnit;
 
 import static games.CardUtils.CARDS_TOTAL_COUNT;
@@ -7,6 +9,7 @@ import static games.CardUtils.getShaffledCards;
 
 
 public class Drunkard {
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(Drunkard.class);
 
     private static final int PLAYERS_COUNT = 2;
     private static final String[] players = {"Игрок №1", "Игрок №2"};
@@ -17,7 +20,7 @@ public class Drunkard {
     private static int[] playersCardHeads = {CARDS_TOTAL_COUNT / PLAYERS_COUNT, CARDS_TOTAL_COUNT / PLAYERS_COUNT};
 
     public static void main(String... __) throws InterruptedException {
-        System.out.println("Сдаем карты");
+        log.info("Сдаем карты");
 
         dealCards(playersCards);
 
@@ -26,34 +29,34 @@ public class Drunkard {
 
         while (!hasWinner(winner)) {
 
-            System.out.printf("Ход №%s, %s карта: %s; %s карта: %s%n", turnCount,
+            log.info(String.format("Ход №%s, %s карта: %s; %s карта: %s%n", turnCount,
                     players[0],
                     CardUtils.toString(playersCards[0][playersCardTails[0]]),
                     players[1],
-                    CardUtils.toString(playersCards[1][playersCardTails[1]]));
+                    CardUtils.toString(playersCards[1][playersCardTails[1]])));
 
             int curCardP1 = getCard(0);
             int curCardP2 = getCard(1);
             winner = PLAYERS_COUNT;
             if (curCardP1 > curCardP2 || curCardP1 == 0 && curCardP2 == 8) {
-                addCard2Player(0, new int[]{curCardP1, curCardP2});
+                addCard2Player(0, curCardP1, curCardP2);
                 winner = 0;
-                System.out.println("Кон за первым игроком!");
+                log.info("Кон за первым игроком!");
             } else if (curCardP1 < curCardP2 || curCardP2 == 0 && curCardP1 == 8) {
-                addCard2Player(1, new int[]{curCardP1, curCardP2});
+                addCard2Player(1, curCardP1, curCardP2);
                 winner = 1;
-                System.out.println("Кон за вторым игроком!");
+                log.info("Кон за вторым игроком!");
             } else {
                 int[] arrCards = {curCardP1};
                 addCard2Player(0, arrCards);
                 arrCards[0] = curCardP2;
                 addCard2Player(1, arrCards);
-                System.out.println("Ничья!");
+                log.info("Ничья!");
             }
-            System.out.printf("У игрока №1 %s карт, у игрока №2 %s карт%n", countCards(playersCardTails[0],
+            log.info(String.format("У игрока №1 %s карт, у игрока №2 %s карт%n", countCards(playersCardTails[0],
                     playersCardHeads[0]),
                     countCards(playersCardTails[1],
-                            playersCardHeads[1]));
+                            playersCardHeads[1])));
 
             turnCount += 1;
             TimeUnit.SECONDS.sleep(2);
@@ -83,7 +86,7 @@ public class Drunkard {
 
     private static boolean hasWinner(int winner) {
         if (winner < PLAYERS_COUNT && playerCardsIsEmpty(winner)) {
-            System.out.println("У нас победитель! Выиграл " + players[winner]);
+            log.info("У нас победитель! Выиграл " + players[winner]);
             return true;
         }
         return false;

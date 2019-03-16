@@ -1,9 +1,12 @@
 package games;
 
+import org.slf4j.Logger;
+
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 public class BlackJack {
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(BlackJack.class);
 
     private static int[] cards; // Основная колода
     private static int cursor; // Счётчик карт основной колоды
@@ -31,28 +34,28 @@ public class BlackJack {
                 }
             }
 
-            System.out.println("Игрок набрал " + getFinalSum(0));
+            log.info("Игрок набрал " + getFinalSum(0));
 
             addCard2Player(1);
             addCard2Player(1);
             while (sum(1) < MAX_VALUE - 4) {
                 addCard2Player(1);
             }
-            System.out.println("Казино набрало " + getFinalSum(1));
-            System.out.println("Победитель - " + checkWinner());
+            log.info("Казино набрало " + getFinalSum(1));
+            log.info("Победитель - " + checkWinner());
             TimeUnit.SECONDS.sleep(2);
 
         }
 
         if (playersMoney[0] > 0)
-            System.out.println("Вы выиграли! Поздравляем!");
+            log.info("Вы выиграли! Поздравляем!");
         else
-            System.out.println("Вы проиграли. Соболезнуем...");
+            log.info("Вы проиграли. Соболезнуем...");
 
     }
 
     private static void initRound() {
-        System.out.println("\nУ Вас " + playersMoney[0] + "$, у Казино - " + playersMoney[1] + "$. Начинаем новый раунд!");
+        log.info("\nУ Вас " + playersMoney[0] + "$, у Казино - " + playersMoney[1] + "$. Начинаем новый раунд!");
         cards = CardUtils.getShaffledCards();
         playersCards = new int[2][MAX_CARDS_COUNT];
         playersCursors = new int[]{0, 0};
@@ -84,7 +87,7 @@ public class BlackJack {
     }
 
     static boolean confirm(String message) throws IOException {
-        System.out.println(message + " \"Y\" - Да, {любой другой символ} - нет (Чтобы выйти из игры, нажмите Ctrl + C)");
+        log.info(message + " \"Y\" - Да, {любой другой символ} - нет (Чтобы выйти из игры, нажмите Ctrl + C)");
         switch (Choice.getCharacterFromUser()) {
             case 'Y':
             case 'y':
@@ -95,7 +98,7 @@ public class BlackJack {
     }
 
     private static void addCard2Player(int player) {
-        System.out.println("Выпала карта - " + CardUtils.toString(cards[cursor]));
+        log.info("Выпала карта - " + CardUtils.toString(cards[cursor]));
         playersCards[player][playersCursors[player]] = cards[cursor];
         playersCursors[player] = playersCursors[player] + 1;
         cursor += 1;
