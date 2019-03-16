@@ -1,6 +1,7 @@
 package games;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 public class BlackJack {
 
@@ -12,11 +13,11 @@ public class BlackJack {
 
     private static final int MAX_VALUE = 21;
     private static final int MAX_CARDS_COUNT = 8;
-    private static final int BET = 8;
+    private static final int BET = 10;
 
     private static int[] playersMoney = {100, 100};
 
-    public static void main(String... __) throws IOException {
+    public static void main(String... __) throws IOException, InterruptedException {
         while (playersMoney[0] > 0 && playersMoney[1] > 0) {
             initRound();
             addCard2Player(0);
@@ -33,14 +34,13 @@ public class BlackJack {
             System.out.println("Игрок набрал " + getFinalSum(0));
 
             addCard2Player(1);
-            System.out.println();
             addCard2Player(1);
             while (sum(1) < MAX_VALUE - 4) {
                 addCard2Player(1);
             }
             System.out.println("Казино набрало " + getFinalSum(1));
             System.out.println("Победитель - " + checkWinner());
-
+            TimeUnit.SECONDS.sleep(2);
 
         }
 
@@ -84,7 +84,7 @@ public class BlackJack {
     }
 
     static boolean confirm(String message) throws IOException {
-        System.out.println(message + " \"Y\" - Да, {любой другой символ} - нет (Что бы выйти из игры, нажмите Ctrl + C)");
+        System.out.println(message + " \"Y\" - Да, {любой другой символ} - нет (Чтобы выйти из игры, нажмите Ctrl + C)");
         switch (Choice.getCharacterFromUser()) {
             case 'Y':
             case 'y':
@@ -103,8 +103,8 @@ public class BlackJack {
 
     static int sum(int player) {
         int result = 0;
-        for (int i = 0; i < playersCards[player].length; i++) {
-            result += playersCards[player][value(i)];
+        for (int i = 0; i < playersCursors[player]; i++) {
+            result += value(playersCards[player][i]);
         }
         return result;
     }
