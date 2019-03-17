@@ -29,11 +29,11 @@ public class Drunkard {
 
         while (!hasWinner(winner)) {
 
-            log.info(String.format("Ход №%s, %s карта: %s; %s карта: %s%n", turnCount,
+            log.info("Ход №{}, {} карта: {}; {} карта: {}%n", turnCount,
                     players[0],
                     CardUtils.toString(playersCards[0][playersCardTails[0]]),
                     players[1],
-                    CardUtils.toString(playersCards[1][playersCardTails[1]])));
+                    CardUtils.toString(playersCards[1][playersCardTails[1]]));
 
             int curCardP1 = getCard(0);
             int curCardP2 = getCard(1);
@@ -53,10 +53,10 @@ public class Drunkard {
                 addCard2Player(1, arrCards);
                 log.info("Ничья!");
             }
-            log.info(String.format("У игрока №1 %s карт, у игрока №2 %s карт%n", countCards(playersCardTails[0],
+            log.info("У игрока №1 {} карт, у игрока №2 {} карт%n", countCards(playersCardTails[0],
                     playersCardHeads[0]),
                     countCards(playersCardTails[1],
-                            playersCardHeads[1])));
+                            playersCardHeads[1]));
 
             turnCount += 1;
             TimeUnit.SECONDS.sleep(2);
