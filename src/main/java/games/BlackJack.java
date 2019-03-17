@@ -8,11 +8,11 @@ import java.util.concurrent.TimeUnit;
 public class BlackJack {
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(BlackJack.class);
 
-    private static int[] cards; // Основная колода
-    private static int cursor; // Счётчик карт основной колоды
+    private static int[] cards;
+    private static int cursor;
 
-    private static int[][] playersCards; // карты игроков. Первый индекс - номер игрока
-    private static int[] playersCursors; // курсоры карт игроков. Индекс - номер игрока
+    private static int[][] playersCards;
+    private static int[] playersCursors;
 
     private static final int MAX_VALUE = 21;
     private static final int MAX_CARDS_COUNT = 8;
@@ -34,15 +34,15 @@ public class BlackJack {
                 }
             }
 
-            log.info("Игрок набрал " + getFinalSum(0));
+            log.info("Игрок набрал {}", getFinalSum(0));
 
             addCard2Player(1);
             addCard2Player(1);
             while (sum(1) < MAX_VALUE - 4) {
                 addCard2Player(1);
             }
-            log.info("Казино набрало " + getFinalSum(1));
-            log.info("Победитель - " + checkWinner());
+            log.info("Казино набрало {}", getFinalSum(1));
+            log.info("Победитель - {}", checkWinner());
             TimeUnit.SECONDS.sleep(2);
 
         }
@@ -55,7 +55,7 @@ public class BlackJack {
     }
 
     private static void initRound() {
-        log.info("\nУ Вас " + playersMoney[0] + "$, у Казино - " + playersMoney[1] + "$. Начинаем новый раунд!");
+        log.info("\nУ Вас {}$, у Казино - {}$. Начинаем новый раунд!", playersMoney[0], playersMoney[1]);
         cards = CardUtils.getShaffledCards();
         playersCards = new int[2][MAX_CARDS_COUNT];
         playersCursors = new int[]{0, 0};
@@ -87,7 +87,7 @@ public class BlackJack {
     }
 
     static boolean confirm(String message) throws IOException {
-        log.info(message + " \"Y\" - Да, {любой другой символ} - нет (Чтобы выйти из игры, нажмите Ctrl + C)");
+        log.info("{} \"Y\" - Да, {любой другой символ} - нет (Чтобы выйти из игры, нажмите Ctrl + C)", message);
         switch (Choice.getCharacterFromUser()) {
             case 'Y':
             case 'y':
@@ -98,7 +98,7 @@ public class BlackJack {
     }
 
     private static void addCard2Player(int player) {
-        log.info("Выпала карта - " + CardUtils.toString(cards[cursor]));
+        log.info("Выпала карта - {}", CardUtils.toString(cards[cursor]));
         playersCards[player][playersCursors[player]] = cards[cursor];
         playersCursors[player] = playersCursors[player] + 1;
         cursor += 1;

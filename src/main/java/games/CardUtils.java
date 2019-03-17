@@ -2,9 +2,9 @@ package games;
 
 import org.apache.commons.math3.util.MathArrays;
 
-public class CardUtils {
+ class CardUtils {
 
-    static final int PARS_TOTAL_COUNT = Par.values().length;
+    private static final int PARS_TOTAL_COUNT = Par.values().length;
 
     static final int CARDS_TOTAL_COUNT = PARS_TOTAL_COUNT * Suit.values().length;
 
@@ -27,7 +27,7 @@ public class CardUtils {
         ACE // Туз
     }
 
-    static Suit getSuit(int cardNumber) {
+    private static Suit getSuit(int cardNumber) {
         return Suit.values()[cardNumber / PARS_TOTAL_COUNT];
     }
 

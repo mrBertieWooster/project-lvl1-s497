@@ -19,7 +19,7 @@ public class Slot {
         while (balance > 0){
 
             log.info("Рады приветствовать Вас на игре \"Однорукий бандит\"");
-            log.info("На Вашем счету {}$, ставка - {}$%n", balance, bet);
+            log.info("На Вашем счету {}$, ставка - {}$", balance, bet);
             log.info("Крутим барабаны!");
             TimeUnit.SECONDS.sleep(2);
             log.info("Текущий розыгрыш принес следующие результаты:");
@@ -32,11 +32,11 @@ public class Slot {
 
             if(firstCounter == secondCounter && firstCounter ==thirdCounter){
                 balance = balance + jackpot;
-                log.info("Поздравляем, Вы выиграли!! Ваш баланс составляет {}!%n", balance);
+                log.info("Поздравляем, Вы выиграли!! Ваш баланс составляет {}!", balance);
                 log.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
             }else{
                 balance = balance - bet;
-                log.info("Вы проиграли {}, Ваш баланс - {}. Попробуйте еще раз!%n", bet, balance);
+                log.info("Вы проиграли {}, Ваш баланс - {}. Попробуйте еще раз!", bet, balance);
                 if (balance == 0){
                     log.info("На Вашем счете кончились средства, игра прекращена:((");
                 }

@@ -29,7 +29,7 @@ public class Drunkard {
 
         while (!hasWinner(winner)) {
 
-            log.info("Ход №{}, {} карта: {}; {} карта: {}%n", turnCount,
+            log.info("Ход №{}, {} карта: {}; {} карта: {}", turnCount,
                     players[0],
                     CardUtils.toString(playersCards[0][playersCardTails[0]]),
                     players[1],
@@ -38,22 +38,23 @@ public class Drunkard {
             int curCardP1 = getCard(0);
             int curCardP2 = getCard(1);
             winner = PLAYERS_COUNT;
-            if (curCardP1 > curCardP2 || curCardP1 == 0 && curCardP2 == 8) {
-                addCard2Player(0, curCardP1, curCardP2);
-                winner = 0;
-                log.info("Кон за первым игроком!");
-            } else if (curCardP1 < curCardP2 || curCardP2 == 0 && curCardP1 == 8) {
-                addCard2Player(1, curCardP1, curCardP2);
-                winner = 1;
-                log.info("Кон за вторым игроком!");
-            } else {
-                int[] arrCards = {curCardP1};
-                addCard2Player(0, arrCards);
-                arrCards[0] = curCardP2;
-                addCard2Player(1, arrCards);
-                log.info("Ничья!");
+            switch (checkRound(curCardP1, curCardP2)) {
+                case 0:
+                    addCard2Player(0, curCardP1, curCardP2);
+                    winner = 0;
+                    log.info("Кон за первым игроком!");
+                    break;
+                case 1:
+                    addCard2Player(1, curCardP1, curCardP2);
+                    winner = 1;
+                    log.info("Кон за вторым игроком!");
+                    break;
+                default:
+                    addCard2Player(0, curCardP1);
+                    addCard2Player(1, curCardP2);
+                    log.info("Ничья!");
             }
-            log.info("У игрока №1 {} карт, у игрока №2 {} карт%n", countCards(playersCardTails[0],
+            log.info("У игрока №1 {} карт, у игрока №2 {} карт", countCards(playersCardTails[0],
                     playersCardHeads[0]),
                     countCards(playersCardTails[1],
                             playersCardHeads[1]));
@@ -61,15 +62,18 @@ public class Drunkard {
             turnCount += 1;
             TimeUnit.SECONDS.sleep(2);
         }
-    }
 
+        log.info("У нас победитель! Выиграл {}", players[winner]);
+
+    }
 
     private static int incrementIndex(int i) {
         return (i + 1) % CARDS_TOTAL_COUNT;
     }
 
     private static int countCards(int tail, int head) {
-        return head - tail + tail > head ? CARDS_TOTAL_COUNT - 1 : 0;
+
+        return tail > head ? head + CARDS_TOTAL_COUNT - 1 - tail : head - tail;
     }
 
     private static int getCard(int index) {
@@ -80,13 +84,20 @@ public class Drunkard {
     private static void addCard2Player(int index, int... cards) {
         for (int card : cards) {
             playersCardHeads[index] = incrementIndex(playersCardHeads[index]);
-            playersCards[index][playersCardHeads[index]] = cards[card];
+            playersCards[index][playersCardHeads[index]] = card;
         }
+    }
+
+    private static int checkRound(int curCardP1, int curCardP2) {
+        if (curCardP1 > curCardP2 || curCardP1 == 0 && curCardP2 == 8) {
+            return 0;
+        } else if (curCardP1 < curCardP2 || curCardP2 == 0 && curCardP1 == 8) {
+            return 1;
+        } else return 2;
     }
 
     private static boolean hasWinner(int winner) {
         if (winner < PLAYERS_COUNT && playerCardsIsEmpty(winner)) {
-            log.info("У нас победитель! Выиграл " + players[winner]);
             return true;
         }
         return false;

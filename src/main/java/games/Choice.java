@@ -8,7 +8,7 @@ public class Choice {
 
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(Choice.class);
 
-    static final String LINE_SEPARATOR = System.lineSeparator();
+    private static final String LINE_SEPARATOR = System.lineSeparator();
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
